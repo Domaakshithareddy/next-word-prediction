@@ -21,16 +21,6 @@ Before training the model, the text is preprocessed to ensure it is clean and st
 3. **N-gram sequence creation**: Use the last 3 words to predict the next one.
 4. **One-hot encoding**: Convert target outputs into categorical format.
 
-### Code:
-```python
-# Preprocessing Function
-def preprocess_text(file_path):
-    with open(file_path, "r", encoding="utf8") as file:
-        text = file.read()
-    text = text.replace('\n', ' ').replace('\r', '').replace('\ufeff', '')
-    return text
-```
-
 ---
 
 ## 2. Model Architecture
@@ -58,36 +48,10 @@ The model is compiled using **categorical cross-entropy loss** and optimized usi
 - **ReduceLROnPlateau**: Lowers learning rate if loss stops improving.
 - **EarlyStopping**: Stops training if no progress is detected.
 
-### Code:
-```python
-# Training Setup
-model.compile(loss="categorical_crossentropy", optimizer=Adam(learning_rate=0.001), metrics=["accuracy"])
-reduce_lr = ReduceLROnPlateau(monitor='loss', factor=0.2, patience=5, min_lr=0.0001, verbose=1)
-early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True, verbose=1)
-
-# Model Training
-history = model.fit(X, y, epochs=150, batch_size=128, validation_split=0.2, callbacks=[reduce_lr, early_stopping])
-```
-
 ---
 
 ## 4. Interactive Prediction
 Once trained, the model can predict the next three words based on user input.
-
-### Code:
-```python
-# Interactive Testing
-print("\nTesting the model:")
-while True:
-    text = input("Enter your line (or 'stop' to exit): ").strip()
-    if text.lower() == "stop":
-        print("Exiting...")
-        break
-    try:
-        predict_next_words(model, tokenizer, text, top_k=3, temperature=0.8, num_words=3)
-    except Exception as e:
-        print(f"Error: {e}")
-```
 
 ---
 
@@ -108,28 +72,8 @@ pickle.dump(tokenizer, open('tokenizer_improved.pkl', 'wb'))
 ```bash
 pip install numpy tensorflow keras
 ```
-### Train the Model
-```bash
-python train.py
-```
-### Test the Model
-```bash
-python test.py
-```
-
 ---
 
-## 7. Future Improvements
-- Integration with **pre-trained word embeddings** (GloVe, Word2Vec) for better contextual predictions.
-- Fine-tuning hyperparameters using **Bayesian Optimization**.
-- Deploying as a **web service** using Flask or FastAPI.
-
----
-
-## 8. Contributors
+## 7. Contributors
 If you would like to contribute to this project, feel free to open a pull request!
 
----
-
-## 9. License
-This project is released under the MIT License.
