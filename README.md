@@ -1,79 +1,31 @@
-## Next Word Prediction Model
+# Next Word Prediction using Enhanced Markov Chains
 
-This repository contains an LSTM-based Next Word Prediction model that uses deep learning techniques to predict the next word(s) in a sequence. The model has been optimized for better accuracy and efficiency.
+## Project Overview
 
----
+This project implements a robust **Next Word Prediction** system using an **Enhanced Markov Chain model**. The system is designed to predict the most probable next words given a seed input by analyzing a corpus of text data. It leverages probabilistic language modeling and beam search techniques to enhance prediction accuracy and robustness.
 
-### Features
-- **Data Preprocessing**: Text cleaning, tokenization, and sequence generation.
-- **Bidirectional LSTM Model**: Uses an advanced architecture for context-aware predictions.
-- **Hyperparameter Optimization**: Improved embedding size, learning rate adjustments, and early stopping.
-- **Interactive Testing**: Real-time prediction of the next three words.
+## Key Features
 
----
+* **Multi-order Markov Chains:** Supports configurable Markov chain orders (default is 3), capturing varying levels of context.
+* **Smoothing Techniques:** Applies additive (Laplace) smoothing to handle unseen word transitions and avoid zero probabilities.
+* **Beam Search Decoding:** Utilizes beam search with adjustable width to generate more coherent and higher-probability word sequences.
+* **Custom Preprocessing:** Includes text normalization to handle noisy input files and unify formatting.
+* **Scalability Handling:** Designed to issue warnings for large datasets and prevent memory-related crashes.
+* **Fallback Mechanisms:** Introduces graceful fallbacks with uniform probability sampling when input states are not found in training data.
 
-## 1. Data Preprocessing
-Before training the model, the text is preprocessed to ensure it is clean and structured for learning.
+## Input Requirements
 
-### Steps:
-1. **Read and clean the text**: Remove unwanted characters while keeping punctuation.
-2. **Tokenization**: Convert text into sequences of integers.
-3. **N-gram sequence creation**: Use the last 3 words to predict the next one.
-4. **One-hot encoding**: Convert target outputs into categorical format.
+* A set of `.txt` files containing natural language text data.
+* Cleaned text with consistent spacing and encoding (handled by preprocessing pipeline).
 
----
+## Output
 
-## 2. Model Architecture
-The model is built using a **Bidirectional LSTM** to capture both past and future context. The architecture consists of:
-- **Embedding Layer**: Converts words into dense vectors of fixed size.
-- **Two Bidirectional LSTMs**: Enhances learning with forward and backward information flow.
-- **Dense Layers**: Extracts relevant features and predicts the next word.
+* For a given input phrase (seed text), the system predicts the next word(s) based on learned probabilities.
+* Supports flexible word generation lengths.
 
-### Code:
-```python
-# Model Definition
-model = Sequential([
-    Embedding(vocab_size, 50, input_length=sequence_length),
-    Bidirectional(LSTM(500, return_sequences=True)),
-    Bidirectional(LSTM(500)),
-    Dense(500, activation="relu"),
-    Dense(vocab_size, activation="softmax")
-])
-```
+## Usage Flow
 
----
-
-## 3. Training the Model
-The model is compiled using **categorical cross-entropy loss** and optimized using the Adam optimizer. To enhance training efficiency:
-- **ReduceLROnPlateau**: Lowers learning rate if loss stops improving.
-- **EarlyStopping**: Stops training if no progress is detected.
-
----
-
-## 4. Interactive Prediction
-Once trained, the model can predict the next three words based on user input.
-
----
-
-## 5. Model Saving and Deployment
-After training, the model is saved for later use.
-
-### Code:
-```python
-# Save Model and Tokenizer
-model.save("nextword_improved.keras")
-pickle.dump(tokenizer, open('tokenizer_improved.pkl', 'wb'))
-```
-
----
-
-## 6. How to Run
-### Install Dependencies
-```bash
-pip install numpy tensorflow keras
-```
----
-
-## 7. Contributors
-If you would like to contribute to this project, feel free to open a pull request!
-
+1. Input text files are preprocessed and concatenated into a single dataset.
+2. An enhanced Markov Chain model is trained on this dataset.
+3. The user provides a seed phrase, and the model returns the most likely next words.
+4. A series of test seed sentences are evaluated to showcase the model’s performance and generalization.
